@@ -17,14 +17,14 @@ function init(bundle, parent, options = {}) {
 
   // Render your app content to the default cylinder surface
   r360.renderToSurface(
-    r360.createRoot("Buttons", {
+    r360.createRoot("ConnectedButtons", {
       /* initial props */
     }),
     buttonsPanel
   );
 
   r360.renderToSurface(
-    r360.createRoot("InfoPanel", {
+    r360.createRoot("ConnectedHouseInfoPanel", {
       /* initial props */
     }),
     infoPanel

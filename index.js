@@ -9,24 +9,11 @@ import {
   asset
 } from "react-360";
 import house from "./data/houseData";
+import { connect, changeRoom } from "./store";
 
 export default class Buttons extends React.Component {
-  state = {
-    room: house.House.roomName,
-    info: house.House.info,
-    adjacentRooms: house.House.adjacentRooms
-  };
-
   clickHandler(roomSelection) {
-    this.setState({
-      room: house[`${roomSelection}`].roomName,
-      info: house[`${roomSelection}`].info,
-      adjacentRooms: house[`${roomSelection}`].adjacentRooms
-    });
-
-    Environment.setBackgroundImage(
-      asset(`./360_${house[`${roomSelection}`].img}`)
-    );
+    changeRoom(roomSelection);
   }
 
   createRoomButtons(adjacentRooms) {
@@ -51,72 +38,29 @@ export default class Buttons extends React.Component {
       <View style={styles.panel}>
         <View style={styles.greetingBox}>
           <Text style={styles.greeting}>Room Selection</Text>
-          <Text>{this.state.room}</Text>
-          {this.createRoomButtons(this.state.adjacentRooms)}
-        </View>
-
-        <View style={styles.greetingBox}>
-          <Text style={styles.greeting}>Room</Text>
-          <Text>{this.state.info}</Text>
+          <Text>{this.props.room}</Text>
+          {this.createRoomButtons(this.props.adjacentRooms)}
         </View>
       </View>
     );
   }
 }
 
-export class InfoPanel extends React.Component {
-  state = {
-    room: house.House.roomName,
-    info: house.House.info,
-    adjacentRooms: house.House.adjacentRooms
-  };
-
-  clickHandler(roomSelection) {
-    this.setState({
-      room: house[`${roomSelection}`].roomName,
-      info: house[`${roomSelection}`].info,
-      adjacentRooms: house[`${roomSelection}`].adjacentRooms
-    });
-
-    Environment.setBackgroundImage(
-      asset(`./360_${house[`${roomSelection}`].img}`)
-    );
-  }
-
-  createRoomButtons(adjacentRooms) {
-    let rooms = adjacentRooms;
-    let buttons = [];
-
-    rooms.map(room =>
-      buttons.push(
-        <VrButton
-          key={`${room}` + "-button"}
-          onClick={() => this.clickHandler(room)}
-        >
-          <Text style={{ backgroundColor: "green" }}>{room}</Text>
-        </VrButton>
-      )
-    );
-    return buttons;
-  }
-
+export class HouseInfoPanel extends React.Component {
   render() {
     return (
       <View style={styles.panel}>
-        <View style={styles.greetingBox}>
-          <Text style={styles.greeting}>Room Selection</Text>
-          <Text>{this.state.room}</Text>
-          {this.createRoomButtons(this.state.adjacentRooms)}
-        </View>
-
-        <View style={styles.greetingBox}>
+        <View>
           <Text style={styles.greeting}>Room</Text>
-          <Text>{this.state.info}</Text>
+          <Text>{this.props.info}</Text>
         </View>
       </View>
     );
   }
 }
+
+const ConnectedButtons = connect(Buttons);
+const ConnectedHouseInfoPanel = connect(HouseInfoPanel);
 
 const styles = StyleSheet.create({
   panel: {
@@ -139,5 +83,8 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent("Buttons", () => Buttons);
-AppRegistry.registerComponent("InfoPanel", () => InfoPanel);
+AppRegistry.registerComponent("ConnectedButtons", () => ConnectedButtons);
+AppRegistry.registerComponent(
+  "ConnectedHouseInfoPanel",
+  () => ConnectedHouseInfoPanel
+);
