@@ -10,7 +10,61 @@ import {
 } from "react-360";
 import house from "./data/houseData";
 
-export default class HouseTourVR extends React.Component {
+export default class Buttons extends React.Component {
+  state = {
+    room: house.House.roomName,
+    info: house.House.info,
+    adjacentRooms: house.House.adjacentRooms
+  };
+
+  clickHandler(roomSelection) {
+    this.setState({
+      room: house[`${roomSelection}`].roomName,
+      info: house[`${roomSelection}`].info,
+      adjacentRooms: house[`${roomSelection}`].adjacentRooms
+    });
+
+    Environment.setBackgroundImage(
+      asset(`./360_${house[`${roomSelection}`].img}`)
+    );
+  }
+
+  createRoomButtons(adjacentRooms) {
+    let rooms = adjacentRooms;
+    let buttons = [];
+
+    rooms.map(room =>
+      buttons.push(
+        <VrButton
+          key={`${room}` + "-button"}
+          onClick={() => this.clickHandler(room)}
+        >
+          <Text style={{ backgroundColor: "green" }}>{room}</Text>
+        </VrButton>
+      )
+    );
+    return buttons;
+  }
+
+  render() {
+    return (
+      <View style={styles.panel}>
+        <View style={styles.greetingBox}>
+          <Text style={styles.greeting}>Room Selection</Text>
+          <Text>{this.state.room}</Text>
+          {this.createRoomButtons(this.state.adjacentRooms)}
+        </View>
+
+        <View style={styles.greetingBox}>
+          <Text style={styles.greeting}>Room</Text>
+          <Text>{this.state.info}</Text>
+        </View>
+      </View>
+    );
+  }
+}
+
+export class InfoPanel extends React.Component {
   state = {
     room: house.House.roomName,
     info: house.House.info,
@@ -85,4 +139,5 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent("HouseTourVR", () => HouseTourVR);
+AppRegistry.registerComponent("Buttons", () => Buttons);
+AppRegistry.registerComponent("InfoPanel", () => InfoPanel);
